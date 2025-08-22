@@ -33,6 +33,7 @@ def main():
     blade_fname = config.IN['paths']['blade_file']
     blade_high_fname = config.IN['paths']['blade_high']
     blade_low_fname = config.IN['paths']['blade_low']
+    output_dir = config.IN['paths']['output_dir']
 
     print("Reading mesh data...")
     mesh = SU2Mesh("APU_rotor.su2")
@@ -55,8 +56,8 @@ def main():
         tip_points.append(blade_dict[idx])
 
     print("Writing MoveSurface files...")
-    writeCombinedMoveSurface("MoveSurface_Blade_tip.txt", tip_points)
-    writeCombinedMoveSurface("MoveSurface_Blade_No_Tip.txt", blade_no_tip)
+    writeCombinedMoveSurface(output_dir + "MoveSurface_Blade_tip.txt", tip_points)
+    writeCombinedMoveSurface(output_dir + "MoveSurface_Blade_No_Tip.txt", blade_no_tip)
     plotPoints(tip_points)
     plotCylPoints(tip_points)
     plt.show()
