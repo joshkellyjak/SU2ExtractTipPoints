@@ -61,7 +61,6 @@ def main():
     plotPoints(tip_points)
     plotCylPoints(tip_points)
     plt.show()
-    print("hello")
 
 if __name__ == "__main__":
     main()
