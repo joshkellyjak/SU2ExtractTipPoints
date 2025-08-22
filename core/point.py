@@ -24,26 +24,6 @@ class Point:
         self.z = _z
         self.r = np.sqrt(self.x**2 + self.y**2)
         self.theta = np.arctan2(self.y, self.x)
-        if transform:
-            self.transformCoordinates()
-        pass
-
-    def getRadialDistance(self):
-        # Gets radial distance from origin
-        return self.r
-    
-    def setMCoordinate(self, m):
-        self.m = m
-        pass
-    
-    def transformCoordinates(self, theta=-10*np.pi/180):
-        """
-        Here we transform coordinates as to avoid singularities encountered
-        when considering trigonometric operations at 90 degrees
-        The transformed coordinates are given by chi and eta, z is conserved
-        """
-        self.chi = self.z*np.cos(theta) - self.r*np.sin(theta)
-        self.eta = self.z*np.sin(theta) + self.r*np.cos(theta)
         pass
 
 def getPoint(index, points):
@@ -54,22 +34,6 @@ def getPoint(index, points):
         if point.index == index:
             return point
     raise Exception("The given index does not match any point in the list!")
-
-
-def getCoords(points):
-    """
-    This returns the cartesian coordinates for a point, this is used when coordinate
-    values are needed
-    """
-    return np.array([[p.x, p.y, p.z] for p in points])
-
-def getCylindricalCoords(points):
-    return np.array([[p.r, p.theta, p.z] for p in points])
-
-def getTransformXY(x, y, alfa):
-    a = x*np.cos(alfa) - y*np.sin(alfa)
-    b = x*np.sin(alfa) + y*np.cos(alfa)
-    return a, b
 
 def getRemovedSharedPoints(points_a, points_b):
     """
@@ -82,7 +46,7 @@ def getRemovedSharedPoints(points_a, points_b):
 
     return [getPoint(index, points_a) for index in a_index if index not in shared_index]
 
-def getRemovedDuplicateVals(points, bar=False):
+def getRemovedDuplicateVals(points):
     """
     Returns a list of points where there are no duplicate values of a given variable
     """
@@ -91,13 +55,7 @@ def getRemovedDuplicateVals(points, bar=False):
     unique_coords = list()
     removed_indices = list()
 
-    if bar:
-        progress = ProgressBar(len(points))
-
     for i, coord in getEnumRZData(points):
-        if bar:
-            progress.update(int(i))
-            
         if coord[0] not in seen:
             unique_coords.append(coord)
             seen.add(coord[0])
@@ -111,7 +69,7 @@ def getRemovedDuplicateVals(points, bar=False):
 def getEnumRZData(points):
     for point in points:
         index = point.index
-        yield index, [round(point.r, 8), round(point.z, 8)]
+        yield index, [point.r, point.z]
     
 def buildPointDictionary(points):
     """
